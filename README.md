@@ -65,16 +65,14 @@ npm install -g netlify-cli
 3. **Set up your environment variables:**
 Create a `.env` file in the root directory and add your Google Gemini API key:
 ```text
-
 GEMINI_API_KEY="your_secret_key_here"
 ```
 
 4.  **Start the local development server:**
 ```
-    
 netlify dev
-
 ```
+
 > *Your app will typically be running on `http://localhost:8888`.*
 
 
