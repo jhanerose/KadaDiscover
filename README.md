@@ -3,7 +3,7 @@
 ![KadaDiscover Website](demo/ui.png)
 **[🌐 Try KadaDiscover Live Here!](https://kadadiscover.netlify.app/)**   
 An interactive AI Career Explorer designed specifically to help Filipino students find modern, tech-adjacent, and unconventional career paths based on their hobbies and interests. 
-
+![KadaDiscover User Guide](demo/kadadiscover.gif)
 
 ## 🌟 Features
 * **AI-Powered Matching:** Uses Google's Gemini model to analyze user interests and generate accurate, creative insights.
