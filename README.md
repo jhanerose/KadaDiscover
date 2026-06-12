@@ -1,7 +1,7 @@
 
 # KadaDiscover 🚀
-**[🌐 Try KadaDiscover Live Here!](https://kadadiscover.netlify.app/)**
 ![KadaDiscover Website](demo/ui.png)
+**[🌐 Try KadaDiscover Live Here!](https://kadadiscover.netlify.app/)**   
 An interactive AI Career Explorer designed specifically to help Filipino students find modern, tech-adjacent, and unconventional career paths based on their hobbies and interests. 
 
 
