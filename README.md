@@ -1,7 +1,7 @@
 
 # KadaDiscover 🚀
 **[🌐 Try KadaDiscover Live Here!](https://kadadiscover.netlify.app/)**
-
+![KadaDiscover Website](demo/ui.png)
 An interactive AI Career Explorer designed specifically to help Filipino students find modern, tech-adjacent, and unconventional career paths based on their hobbies and interests. 
 
 
@@ -23,8 +23,8 @@ If you want to fork this project or run it on your local machine, follow these s
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/jhanerose/kadadiscover.git
-   cd kadadiscover
+   git clone https://github.com/jhanerose/KadaDiscover.git
+   cd KadaDiscover
 2. **Install the Netlify CLI:**
 ```bash
 npm install -g netlify-cli
