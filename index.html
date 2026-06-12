@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KadaDiscover | AI Career Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --blue: #2563EB;
+            --orange: #EA580C;
+            --yellow: #F59E0B;
+            --bg: #F3F4F6;
+            --text: #1F2937;
+            --error: #EF4444;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at top right, #EFF6FF, var(--bg));
+            color: var(--text);
+            padding: 40px 20px;
+            max-width: 650px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        header { text-align: center; margin-bottom: 35px; }
+        h1 { color: var(--blue); font-size: 2.6rem; margin: 0; font-weight: 700; letter-spacing: -0.5px; }
+        h1 span { color: var(--orange); }
+        p.subtitle { color: #4B5563; font-size: 1.1rem; margin: 8px 0 0 0; }
+
+        .card {
+            background: white; padding: 30px; border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); margin-bottom: 25px; border-top: 6px solid var(--blue);
+        }
+        .card label { font-weight: 600; font-size: 1.05rem; display: block; margin-bottom: 12px; }
+        .input-group { position: relative; margin-bottom: 20px; }
+        
+        input {
+            width: 100%; padding: 14px 16px; border: 2px solid #E5E7EB; border-radius: 10px;
+            font-size: 1rem; font-family: 'Poppins', sans-serif; box-sizing: border-box; outline: none; transition: all 0.2s ease;
+        }
+        input:focus { border-color: var(--blue); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15); }
+        
+        .error-msg {
+            color: var(--error); font-size: 0.9rem; font-weight: 500; margin-top: 8px;
+            display: none; align-items: center; gap: 6px; animation: slideDown 0.2s ease-out;
+        }
+        input.input-error { border-color: var(--error); background: #FEF2F2; }
+
+        button {
+            width: 100%; background: var(--orange); color: white; border: none; padding: 15px; border-radius: 10px;
+            font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+        }
+        button:hover:not(:disabled) { background: #C2410C; transform: translateY(-1px); }
+        button:disabled { background: #9CA3AF; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .loading { display: none; text-align: center; color: var(--blue); font-weight: 600; margin: 30px 0; font-size: 1.1rem; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .career-option {
+            background: white; padding: 24px; border-radius: 16px; margin-top: 18px; cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border-left: 6px solid var(--yellow); transition: all 0.2s ease;
+        }
+        .career-option:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1); }
+        .career-option h3 { margin: 0 0 8px 0; color: var(--blue); font-size: 1.4rem; display: flex; align-items: center; gap: 12px; }
+        .career-option h3 i { color: var(--orange); background: #FFF7ED; padding: 8px; border-radius: 8px; font-size: 1.1rem; }
+        .career-option p { margin: 6px 0; font-size: 0.95rem; color: #4B5563; }
+        
+        .click-hint { color: var(--blue) !important; font-size: 0.85rem !important; font-weight: 500; margin-top: 12px !important; display: flex; align-items: center; gap: 6px; }
+        
+        .story { display: none; margin-top: 15px; font-size: 0.95rem; background: #F8FAFC; padding: 18px; border-radius: 10px; border-left: 4px solid var(--blue); color: #334155; }
+        
+        .skills-container { margin-top: 15px; border-top: 1px solid #E2E8F0; padding-top: 12px; }
+        .skills-container h4 { margin: 0 0 8px 0; font-size: 0.9rem; color: var(--text); }
+        .skill-tag {
+            display: inline-block; background: #DBEAFE; color: #1D4ED8; padding: 4px 10px;
+            border-radius: 20px; font-size: 0.8rem; font-weight: 500; margin: 0 6px 6px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Kada<span>Discover</span></h1>
+        <p class="subtitle">Find your path <i class="fa-solid fa-rocket" style="color: var(--orange);"></i></p>
+    </header>
+
+    <div class="card" id="input-section">
+        <label for="interests">
+            <i class="fa-solid fa-lightbulb" style="color: var(--yellow);"></i> What do you enjoy doing?
+        </label>
+        <div class="input-group">
+            <input type="text" id="interests" placeholder="e.g., games, drawing, or solving puzzles">
+            <div id="error-msg" class="error-msg"><i class="fa-solid fa-circle-exclamation"></i> <span></span></div>
+        </div>
+        <button id="submit-btn" onclick="discoverCareers()">Discover Careers <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+    <div class="loading" id="loading">
+        <i class="fa-solid fa-spinner fa-spin"></i> Analyzing interests & matching paths...
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+    // 🔴 API KEY IS SET FOR LOCAL TESTING 
+    const GEMINI_API_KEY = "".trim();
+
+    const inputEl = document.getElementById('interests');
+    const errorMsgEl = document.getElementById('error-msg');
+    const submitBtn = document.getElementById('submit-btn');
+    const resultsContainer = document.getElementById('results');
+
+    window.onload = () => {
+        const savedResults = localStorage.getItem('kadaDiscoverResults');
+        if (savedResults) {
+            renderResults(JSON.parse(savedResults));
+        }
+    };
+
+    inputEl.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') discoverCareers();
+    });
+
+    inputEl.addEventListener('input', () => {
+        inputEl.classList.remove('input-error');
+        errorMsgEl.style.display = 'none';
+    });
+
+    function showError(message) {
+        inputEl.classList.add('input-error');
+        errorMsgEl.querySelector('span').innerText = message;
+        errorMsgEl.style.display = 'flex';
+    }
+
+    async function discoverCareers() {
+        let rawInput = inputEl.value.trim();
+
+        if (!rawInput || rawInput.length < 3) {
+            return showError("Please tell us a bit more about what you enjoy doing!");
+        }
+
+        // Lock UI
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Consulting AI...';
+        document.getElementById('loading').style.display = 'block';
+        resultsContainer.innerHTML = '';
+
+        const systemPrompt = `
+        You are an expert career counselor for Filipino students. 
+        The user will provide their hobbies or interests: "${rawInput}".
+        Analyze their input and suggest 2 modern, tech-adjacent, or unconventional career paths.
+        
+        You MUST return the data as a JSON array of objects. Do not include markdown formatting like \`\`\`json.
+        Each object must have exactly these keys:
+        - "title": The job title (e.g., "Data Analyst").
+        - "icon": A FontAwesome 6 class string relevant to the job (e.g., "fa-solid fa-chart-pie").
+        - "reason": A short 1-sentence reason connecting their specific input to this job.
+        - "story": A 2-sentence "day in the life" story of this job, written in the second person ("You...").
+        - "skills": An array of 3 specific hard/soft skills needed for this job (e.g., ["Excel", "SQL", "Communication"]).
+        `;
+
+        try {
+            // This just knocks on your local backend door
+            const response = await fetch('/.netlify/functions/gemini', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: systemPrompt })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Backend Error:", errorData);
+                throw new Error("Backend Connection Failed");
+            }
+
+            const data = await response.json();
+            
+            // 1. Tell the console to print EXACTLY what the AI sent back
+            console.log("Raw AI Response:", data);
+
+            // 2. Catch the error so the app doesn't crash
+            if (data.error) {
+                throw new Error("Google Error: " + data.error.message);
+            }
+
+            const aiResponseText = data.candidates[0].content.parts[0].text;
+            const generatedCareers = JSON.parse(aiResponseText);
+
+            localStorage.setItem('kadaDiscoverResults', JSON.stringify(generatedCareers));
+            renderResults(generatedCareers);
+
+        } catch (error) {
+            console.error("System Error:", error);
+            showError("Oops! Our AI is taking a quick break. Please try again.");
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Discover Careers <i class="fa-solid fa-arrow-right"></i>';
+            document.getElementById('loading').style.display = 'none';
+        }
+    }
+
+    function renderResults(careers) {
+        resultsContainer.innerHTML = ''; 
+        careers.forEach((c, index) => {
+            let skillsHTML = c.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('');
+            const div = document.createElement('div');
+            div.className = 'career-option';
+            div.innerHTML = `
+                <h3><i class="${c.icon}"></i> ${c.title}</h3>
+                <p><strong>Why?</strong> ${c.reason}</p>
+                <p class="click-hint"><i class="fa-solid fa-circle-info"></i> Click to read a day-in-the-life story</p>
+                <div class="story" id="story-${index}">
+                    ${c.story}
+                    <div class="skills-container">
+                        <h4><i class="fa-solid fa-screwdriver-wrench"></i> Skills to explore:</h4>
+                        ${skillsHTML}
+                    </div>
+                </div>
+            `;
+            div.onclick = () => {
+                const story = document.getElementById(`story-${index}`);
+                story.style.display = story.style.display === 'block' ? 'none' : 'block';
+            };
+            resultsContainer.appendChild(div);
+        });
+    }
+    </script>
+</body>
+</html>
