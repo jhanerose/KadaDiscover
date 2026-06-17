@@ -27,6 +27,95 @@
             line-height: 1.6;
         }
 
+        /* --- UPDATED LOADING SCREEN STYLES --- */
+        #initial-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at top right, #EFF6FF, var(--bg));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.6s ease-out, visibility 0.6s ease-out;
+        }
+
+        .loader-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-anim {
+            width: 110px; 
+            animation: popInPulse 2s ease-in-out forwards;
+        }
+
+        .loader-title {
+            font-size: 2.2rem;
+            margin: 0;
+            color: var(--blue);
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+            animation-delay: 0.3s; /* Waits a moment after the logo appears */
+        }
+        
+        .loader-title span {
+            color: var(--orange);
+        }
+
+        .progress-container {
+            width: 200px;
+            height: 6px;
+            background: #E5E7EB;
+            border-radius: 10px;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+            animation-delay: 0.5s;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: var(--blue);
+            border-radius: 10px;
+            transition: width 0.15s ease-out;
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: #6B7280;
+            font-weight: 600;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes popInPulse {
+            0% { transform: scale(0.5); opacity: 0; }
+            40% { transform: scale(1.1); opacity: 1; }
+            60% { transform: scale(0.95); opacity: 1; }
+            80% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hide-loader {
+            opacity: 0;
+            visibility: hidden;
+        }
+        /* --------------------------------- */
+
         header { text-align: center; margin-bottom: 35px; }
         h1 { color: var(--blue); font-size: 2.6rem; margin: 0; font-weight: 700; letter-spacing: -0.5px; }
         h1 span { color: var(--orange); }
@@ -86,6 +175,18 @@
 </head>
 <body>
 
+    <div id="initial-loader">
+        <div class="loader-content">
+            <img src="img/kadadiscover-logo.png" alt="KadaDiscover Logo" class="logo-anim">
+            <h1 class="loader-title">Kada<span>Discover</span></h1>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="progress-text" id="progress-text">0%</div>
+        </div>
+    </div>
+
     <header>
         <h1>Kada<span>Discover</span></h1>
         <p class="subtitle">Find your path <i class="fa-solid fa-rocket" style="color: var(--orange);"></i></p>
@@ -117,7 +218,37 @@
     const submitBtn = document.getElementById('submit-btn');
     const resultsContainer = document.getElementById('results');
 
+    // --- UPDATED FUNCTION WITH PROGRESS LOGIC ---
+    function launchWebsite() {
+        let progress = 0;
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const loaderScreen = document.getElementById('initial-loader');
+
+        // Simulate a smooth, somewhat randomized loading jump
+        const interval = setInterval(() => {
+            // Add a random amount between 5 and 15 to the progress
+            progress += Math.floor(Math.random() * 10) + 5; 
+            
+            if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+                
+                // Once it hits 100%, wait a tiny fraction of a second before fading out
+                setTimeout(() => {
+                    loaderScreen.classList.add('hide-loader');
+                }, 400); 
+            }
+            
+            progressBar.style.width = progress + '%';
+            progressText.innerText = progress + '%';
+        }, 150); // Updates every 150 milliseconds
+    }
+
     window.onload = () => {
+        // Trigger the loading progress animation
+        launchWebsite();
+
         const savedResults = localStorage.getItem('kadaDiscoverResults');
         if (savedResults) {
             renderResults(JSON.parse(savedResults));
